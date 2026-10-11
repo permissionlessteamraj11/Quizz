@@ -1,0 +1,169 @@
+/* Custom CSS Extensions for Qubit Test Platform */
+
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+
+:root {
+  --bg-sapphire: #0B1120;
+  --bg-card: #131C31;
+  --azure-glow: #00D2FF;
+  --electric-azure: #2563EB;
+  --radiant-gold: #F59E0B;
+}
+
+body {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  background-color: #080D1A;
+  color: #F8FAFC;
+  overflow-x: hidden;
+}
+
+/* Glassmorphism utilities */
+.glass-panel {
+  background: rgba(19, 28, 49, 0.7);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.glass-card-hover {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-card-hover:hover {
+  background: rgba(255, 255, 255, 0.07);
+  border-color: rgba(0, 210, 255, 0.3);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px -5px rgba(0, 210, 255, 0.15);
+}
+
+/* Custom Gradients */
+.gradient-text-azure {
+  background: linear-gradient(135deg, #00D2FF 0%, #3B82F6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.gradient-text-gold {
+  background: linear-gradient(135deg, #FBBF24 0%, #F59E0B 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.gradient-btn-primary {
+  background: linear-gradient(135deg, #2563EB 0%, #00D2FF 100%);
+  transition: all 0.3s ease;
+}
+
+.gradient-btn-primary:hover {
+  background: linear-gradient(135deg, #1D4ED8 0%, #00B4D8 100%);
+  box-shadow: 0 0 20px rgba(0, 210, 255, 0.4);
+}
+
+.gradient-btn-gold {
+  background: linear-gradient(135deg, #D97706 0%, #F59E0B 100%);
+  transition: all 0.3s ease;
+}
+
+.gradient-btn-gold:hover {
+  box-shadow: 0 0 20px rgba(245, 158, 11, 0.4);
+}
+
+/* Glowing Accent Borders */
+.glow-border-azure {
+  box-shadow: 0 0 15px rgba(0, 210, 255, 0.2);
+  border-color: rgba(0, 210, 255, 0.4);
+}
+
+.glow-border-gold {
+  box-shadow: 0 0 15px rgba(245, 158, 11, 0.2);
+  border-color: rgba(245, 158, 11, 0.4);
+}
+
+/* Timer Warning Animation (Last 1 Minute) */
+@keyframes warningPulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
+    border-color: rgba(239, 68, 68, 0.8);
+  }
+  50% {
+    box-shadow: 0 0 20px 5px rgba(239, 68, 68, 0.8);
+    border-color: rgba(239, 68, 68, 1);
+    background-color: rgba(239, 68, 68, 0.15);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
+    border-color: rgba(239, 68, 68, 0.8);
+  }
+}
+
+.timer-warning {
+  animation: warningPulse 1s infinite;
+  color: #EF4444 !important;
+}
+
+/* Question Palette Status Badge Styles */
+.palette-btn {
+  transition: all 0.2s ease;
+  font-weight: 600;
+  border-radius: 0.5rem;
+}
+
+.palette-answered {
+  background-color: #10B981 !important;
+  color: #FFFFFF !important;
+  border-color: #059669 !important;
+}
+
+.palette-unanswered {
+  background-color: #EF4444 !important;
+  color: #FFFFFF !important;
+  border-color: #DC2626 !important;
+}
+
+.palette-marked {
+  background-color: #8B5CF6 !important;
+  color: #FFFFFF !important;
+  border-color: #7C3AED !important;
+}
+
+.palette-current {
+  ring: 2px;
+  ring-color: #00D2FF;
+  border-color: #00D2FF !important;
+  transform: scale(1.08);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0B1120;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #1E293B;
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #334155;
+}
+
+/* Hide scrollbar for clean UI where needed */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
