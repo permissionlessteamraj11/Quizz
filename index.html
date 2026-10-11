@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="en" class="dark scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Qubit Test - Competitive Exam Mock Test & Gamified Quiz Platform</title>
+  <meta name="description" content="Ultra-fast, mobile-responsive competitive exam mock test platform for SSC, Banking, BPSC, and State Exams with real-time peer analytics.">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="css/styles.css">
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            sapphire: {
+              900: '#080D1A',
+              800: '#0B1120',
+              700: '#131C31',
+              600: '#1E293B'
+            },
+            azure: {
+              400: '#38BDF8',
+              500: '#00D2FF',
+              600: '#2563EB',
+              700: '#1D4ED8'
+            },
+            gold: {
+              400: '#FBBF24',
+              500: '#F59E0B',
+              600: '#D97706'
+            }
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-sapphire-900 text-slate-100 min-h-screen flex flex-col font-sans selection:bg-azure-500 selection:text-sapphire-900">
+
+  <!-- ================= HEADER & NAVBAR ================= -->
+  <header class="sticky top-0 z-40 w-full glass-panel border-b border-slate-800/80">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+
+      <!-- Brand Logo -->
+      <a href="#" onclick="app.navigateTo('home'); return false;" class="flex items-center gap-3 group focus:outline-none">
+        <div class="relative flex items-center justify-center w-11 h-11 rounded-xl bg-gradient-to-tr from-azure-600 via-azure-500 to-indigo-500 shadow-lg shadow-azure-500/20 group-hover:scale-105 transition-transform duration-300">
+          <i class="fa-solid fa-atom text-slate-900 text-2xl animate-spin-slow"></i>
+          <span class="absolute -top-1 -right-1 w-3 h-3 bg-gold-500 rounded-full border-2 border-sapphire-900"></span>
+        </div>
+        <div class="flex flex-col">
+          <span class="text-2xl font-extrabold tracking-tight text-white flex items-center gap-1">
+            QUBIT<span class="gradient-text-azure">TEST</span>
+          </span>
+          <span class="text-[10px] uppercase tracking-widest text-azure-400 font-semibold -mt-1">
+            Gamified Exam Engine
+          </span>
+        </div>
+      </a>
+
+      <!-- Desktop Navigation Links -->
+      <nav class="hidden md:flex items-center gap-1 lg:gap-2">
+        <button onclick="app.navigateTo('home')" id="nav-home" class="px-4 py-2 rounded-lg text-sm font-semibold text-azure-400 bg-slate-800/60 border border-azure-500/30 transition-all">
+          <i class="fa-solid fa-house mr-2 text-xs"></i>Home
+        </button>
+        <button onclick="app.navigateTo('mock-tests')" id="nav-mock-tests" class="px-4 py-2 rounded-lg text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-800/40 transition-all">
+          <i class="fa-solid fa-pen-to-square mr-2 text-xs"></i>Mock Tests
+        </button>
+        <button onclick="app.navigateTo('leaderboard')" id="nav-leaderboard" class="px-4 py-2 rounded-lg text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-800/40 transition-all">
+          <i class="fa-solid fa-trophy mr-2 text-xs text-gold-400"></i>Live Leaderboard
+        </button>
+        <button onclick="app.navigateTo('daily-quizzes')" id="nav-daily-quizzes" class="px-4 py-2 rounded-lg text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-800/40 transition-all">
+          <i class="fa-solid fa-bolt mr-2 text-xs text-amber-400"></i>Daily Quizzes
+        </button>
+        <button onclick="app.navigateTo('analytics')" id="nav-analytics" class="px-4 py-2 rounded-lg text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-800/40 transition-all">
+          <i class="fa-solid fa-chart-line mr-2 text-xs text-emerald-400"></i>Analytics
+        </button>
+      </nav>
+
+      <!-- User Profile Badge & Quick Stats -->
+      <div class="hidden sm:flex items-center gap-3">
+        <!-- Rank Badge -->
+        <div class="flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-800/80 border border-gold-500/30 shadow-inner">
+          <i class="fa-solid fa-crown text-gold-400 text-sm"></i>
+          <span class="text-xs text-slate-400">Global Rank:</span>
+          <span class="text-xs font-bold text-gold-400" id="user-navbar-rank">#245</span>
+        </div>
+
+        <!-- User Badge -->
+        <div class="flex items-center gap-3 pl-3 border-l border-slate-800">
+          <div class="text-right">
+            <div class="text-xs font-bold text-white" id="user-navbar-name">Aman Tripathi</div>
+            <div class="text-[11px] text-azure-400 font-semibold flex items-center justify-end gap-1">
+              <i class="fa-solid fa-fire text-amber-500 text-xs"></i>
+              <span id="user-navbar-points">1,285 pts</span>
+            </div>
+          </div>
+          <div class="relative w-10 h-10 rounded-full bg-gradient-to-tr from-azure-600 to-indigo-600 p-0.5 shadow-md">
+            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80" alt="User Profile" class="w-full h-full object-cover rounded-full">
+            <span class="absolute bottom-0 right-0 w-3 h-3 bg-emerald-500 border-2 border-sapphire-900 rounded-full"></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mobile Hamburger Button -->
+      <div class="flex md:hidden items-center gap-2">
+        <!-- Mobile Profile Quick Rank -->
+        <div class="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-800 border border-gold-500/30">
+          <i class="fa-solid fa-crown text-gold-400 text-xs"></i>
+          <span class="text-xs font-bold text-gold-400">#245</span>
+        </div>
+        <button id="mobile-menu-btn" onclick="app.toggleMobileMenu()" class="p-2 rounded-lg text-slate-300 hover:text-white hover:bg-slate-800 focus:outline-none">
+          <i class="fa-solid fa-bars text-xl"></i>
+        </button>
+      </div>
+
+    </div>
+
+    <!-- Mobile Drawer Navigation -->
+    <div id="mobile-menu" class="hidden md:hidden glass-panel border-b border-slate-800 px-4 pt-3 pb-6 space-y-2">
+      <button onclick="app.navigateTo('home'); app.toggleMobileMenu()" class="w-full text-left px-4 py-2.5 rounded-lg text-sm font-semibold text-azure-400 bg-slate-800/80">
+        <i class="fa-solid fa-house mr-3"></i>Home
+      </button>
+      <button onclick="app.navigateTo('mock-tests'); app.toggleMobileMenu()" class="w-full text-left px-4 py-2.5 rounded-lg text-sm font-medium text-slate-300 hover:bg-slate-800/50">
+        <i class="fa-solid fa-pen-to-square mr-3"></i>Mock Tests
+      </button>
+      <button onclick="app.navigateTo('leaderboard'); app.toggleMobileMenu()" class="w-full text-left px-4 py-2.5 rounded-lg text-sm font-medium text-slate-300 hover:bg-slate-800/50">
+        <i class="fa-solid fa-trophy mr-3 text-gold-400"></i>Live Leaderboard
+      </button>
+      <button onclick="app.navigateTo('daily-quizzes'); app.toggleMobileMenu()" class="w-full text-left px-4 py-2.5 rounded-lg text-sm font-medium text-slate-300 hover:bg-slate-800/50">
+        <i class="fa-solid fa-bolt mr-3 text-amber-400"></i>Daily Quizzes
+      </button>
+      <button onclick="app.navigateTo('analytics'); app.toggleMobileMenu()" class="w-full text-left px-4 py-2.5 rounded-lg text-sm font-medium text-slate-300 hover:bg-slate-800/50">
+        <i class="fa-solid fa-chart-line mr-3 text-emerald-400"></i>Analytics
+      </button>
+
+      <div class="pt-4 mt-2 border-t border-slate-800/80 flex items-center justify-between px-2">
+        <div class="flex items-center gap-3">
+          <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80" alt="User Profile" class="w-10 h-10 object-cover rounded-full border border-azure-500">
+          <div>
+            <div class="text-sm font-bold text-white">Aman Tripathi</div>
+            <div class="text-xs text-slate-400">Rank: <span class="text-gold-400 font-bold">#245</span> • <span class="text-azure-400 font-semibold">1,285 pts</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ================= MAIN CONTENT WRAPPER ================= -->
+  <main id="main-content" class="flex-grow">
+
+    <!-- SECTION: HOME & HERO VIEW -->
+    <div id="view-home" class="view-section space-y-16 py-8">
+
+      <!-- HERO SECTION -->
+      <section class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-12 overflow-hidden">
+
+        <!-- Glowing background light spots -->
+        <div class="absolute -top-24 -left-20 w-96 h-96 bg-azure-600/20 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute -top-10 -right-20 w-96 h-96 bg-indigo-600/20 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute top-1/2 left-1/3 w-80 h-80 bg-gold-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center relative z-10">
+
+          <!-- Left Hero Text -->
+          <div class="lg:col-span-7 space-y-8 text-center lg:text-left">
+
+            <!-- Live Badge -->
+            <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-800/90 border border-azure-500/40 text-xs font-semibold text-azure-400 shadow-lg">
+              <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+              <span>SSC CGL, Bihar BPSC/BSSC & Banking Mocks Live 2025</span>
+            </div>
+
+            <!-- Catchy Main Headline -->
+            <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white tracking-tight leading-tight">
+              Compete, Rank, and <br class="hidden sm:inline">
+              <span class="gradient-text-azure">Master Your Exams</span> with <span class="gradient-text-gold">Qubit Test</span>
+            </h1>
+
+            <!-- Subheadline -->
+            <p class="text-lg sm:text-xl text-slate-300 max-w-2xl font-normal leading-relaxed mx-auto lg:mx-0">
+              Experience India's fastest competitive exam simulator with <span class="text-azure-400 font-semibold">real-time peer comparison</span>, ultra-accurate speed metrics, and deep percentile analytics for SSC, Bihar State Exams, and Banking.
+            </p>
+
+            <!-- CTA Buttons -->
+            <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
+              <button onclick="app.startFreeMockTest()" class="w-full sm:w-auto px-8 py-4 rounded-xl font-bold text-white gradient-btn-primary shadow-xl shadow-azure-600/30 flex items-center justify-center gap-3 text-base">
+                <i class="fa-solid fa-play text-sm"></i>
+                Start Free Mock Test
+              </button>
+              <button onclick="app.navigateTo('leaderboard')" class="w-full sm:w-auto px-8 py-4 rounded-xl font-bold text-slate-200 glass-card glass-card-hover border border-slate-700/80 flex items-center justify-center gap-3 text-base">
+                <i class="fa-solid fa-trophy text-gold-400"></i>
+                View Global Leaderboard
+              </button>
+            </div>
+
+            <!-- Hero Stats Grid -->
+            <div class="grid grid-cols-3 gap-4 pt-6 border-t border-slate-800/80 max-w-lg mx-auto lg:mx-0">
+              <div class="text-center lg:text-left">
+                <div class="text-2xl sm:text-3xl font-extrabold text-white">250K+</div>
+                <div class="text-xs text-slate-400 font-medium">Active Aspirants</div>
+              </div>
+              <div class="text-center lg:text-left">
+                <div class="text-2xl sm:text-3xl font-extrabold text-azure-400">99.8%</div>
+                <div class="text-xs text-slate-400 font-medium">Exam Simulation</div>
+              </div>
+              <div class="text-center lg:text-left">
+                <div class="text-2xl sm:text-3xl font-extrabold text-gold-400">Real-time</div>
+                <div class="text-xs text-slate-400 font-medium">Rank Benchmark</div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Right Hero Interactive Feature Card -->
+          <div class="lg:col-span-5">
+            <div class="glass-panel p-6 sm:p-8 rounded-2xl glow-border-azure relative space-y-6">
+
+              <!-- Card Header -->
+              <div class="flex items-center justify-between pb-4 border-b border-slate-800">
+                <div class="flex items-center gap-3">
+                  <div class="w-10 h-10 rounded-lg bg-azure-500/20 flex items-center justify-center text-azure-400">
+                    <i class="fa-solid fa-bolt text-lg"></i>
+                  </div>
+                  <div>
+                    <h3 class="text-base font-bold text-white">Featured Live Mock</h3>
+                    <p class="text-xs text-slate-400">Instant Peer Speed Analysis</p>
+                  </div>
+                </div>
+                <span class="px-2.5 py-1 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-xs font-bold uppercase">
+                  Active Now
+                </span>
+              </div>
+
+              <!-- Quick Quiz Preview Content -->
+              <div class="space-y-4">
+                <div class="p-4 rounded-xl bg-slate-900/80 border border-slate-800 space-y-2">
+                  <div class="flex justify-between items-center text-xs text-slate-400">
+                    <span>SSC CGL Tier-1 Grand Mock</span>
+                    <span class="text-gold-400 font-bold"><i class="fa-solid fa-stopwatch mr-1"></i> 10 Mins</span>
+                  </div>
+                  <div class="text-sm font-semibold text-white">
+                    "Select the related number from the given alternatives: 12 : 144 :: 15 : ?"
+                  </div>
+                </div>
+
+                <!-- Simulated Options -->
+                <div class="grid grid-cols-2 gap-3 text-xs font-medium">
+                  <div class="p-3 rounded-lg bg-slate-800/60 border border-slate-700/60 text-slate-300 flex items-center justify-between">
+                    <span>A) 180</span>
+                  </div>
+                  <div class="p-3 rounded-lg bg-azure-600/30 border border-azure-500/60 text-white flex items-center justify-between font-bold">
+                    <span>B) 225</span>
+                    <i class="fa-solid fa-circle-check text-azure-400"></i>
+                  </div>
+                  <div class="p-3 rounded-lg bg-slate-800/60 border border-slate-700/60 text-slate-300 flex items-center justify-between">
+                    <span>C) 210</span>
+                  </div>
+                  <div class="p-3 rounded-lg bg-slate-800/60 border border-slate-700/60 text-slate-300 flex items-center justify-between">
+                    <span>D) 250</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Mini Speed Benchmark -->
+              <div class="p-3.5 rounded-xl bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 border border-slate-800 flex items-center justify-between text-xs">
+                <div class="flex items-center gap-2">
+                  <i class="fa-solid fa-gauge-high text-gold-400"></i>
+                  <span class="text-slate-300">Your Speed: <strong class="text-white">12s</strong></span>
+                </div>
+                <div class="text-slate-400">
+                  Peer Avg: <strong class="text-slate-200">28s</strong> (Top 2%)
+                </div>
+              </div>
+
+              <button onclick="app.launchQuiz('ssc-cgl-tier1-01')" class="w-full py-3.5 rounded-xl font-bold text-white gradient-btn-primary text-sm shadow-md">
+                Launch This Test Now
+              </button>
+
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- EXAM CATEGORY & MOCK TESTS SECTION -->
+      <section id="mock-tests-section" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+
+        <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+          <div>
+            <div class="text-xs uppercase tracking-widest text-azure-400 font-extrabold mb-1">
+              Curated Exam Series
+            </div>
+            <h2 class="text-3xl font-extrabold text-white">Explore Mock Test Categories</h2>
+          </div>
+          <p class="text-slate-400 text-sm max-w-md">
+            All tests feature realistic exam patterns, negative marking options, and automated solutions.
+          </p>
+        </div>
+
+        <!-- Category Filter Tabs -->
+        <div class="flex items-center gap-2 overflow-x-auto pb-2 no-scrollbar" id="category-tabs">
+          <!-- Dynamically generated tabs -->
+        </div>
+
+        <!-- Mock Tests Card Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="tests-grid">
+          <!-- Dynamically rendered tests cards -->
+        </div>
+      </section>
+
+      <!-- GLOBAL LIVE LEADERBOARD PREVIEW SECTION -->
+      <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="glass-panel p-6 sm:p-10 rounded-3xl space-y-8 border border-slate-800">
+
+          <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 pb-6 border-b border-slate-800">
+            <div>
+              <div class="inline-flex items-center gap-2 text-xs font-extrabold text-gold-400 uppercase tracking-widest mb-1">
+                <i class="fa-solid fa-trophy"></i> Live Rankings
+              </div>
+              <h2 class="text-3xl font-extrabold text-white">Global Aspirant Leaderboard</h2>
+            </div>
+            <button onclick="app.navigateTo('leaderboard')" class="px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-sm font-semibold border border-slate-700 transition-all flex items-center gap-2">
+              Full Standings <i class="fa-solid fa-arrow-right text-xs"></i>
+            </button>
+          </div>
+
+          <!-- User Rank Highlight Card -->
+          <div class="p-5 rounded-2xl bg-gradient-to-r from-slate-900 via-slate-800/90 to-slate-900 border border-gold-500/40 glow-border-gold flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="flex items-center gap-4">
+              <div class="w-12 h-12 rounded-xl bg-gold-500/20 border border-gold-500/40 flex items-center justify-center text-gold-400 text-xl font-black">
+                #245
+              </div>
+              <div>
+                <div class="text-xs text-slate-400 font-semibold uppercase">Logged-In Aspirant Status</div>
+                <div class="text-lg font-bold text-white flex items-center gap-2">
+                  Aman Tripathi
+                  <span class="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 text-xs font-extrabold">
+                    <i class="fa-solid fa-arrow-trend-up mr-1"></i>↑ 3 positions today
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-6 text-sm">
+              <div class="text-center">
+                <div class="text-xs text-slate-400">Total Points</div>
+                <div class="font-extrabold text-gold-400">1,285 pts</div>
+              </div>
+              <div class="text-center">
+                <div class="text-xs text-slate-400">Avg Speed</div>
+                <div class="font-extrabold text-azure-400">34s / qn</div>
+              </div>
+              <div class="text-center">
+                <div class="text-xs text-slate-400">Accuracy</div>
+                <div class="font-extrabold text-emerald-400">88%</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Leaderboard Table Preview -->
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+              <thead>
+                <tr class="text-xs font-bold uppercase tracking-wider text-slate-400 border-b border-slate-800">
+                  <th class="py-3 px-4">Rank</th>
+                  <th class="py-3 px-4">Aspirant Handle</th>
+                  <th class="py-3 px-4">Target Exam</th>
+                  <th class="py-3 px-4 text-center">Accuracy %</th>
+                  <th class="py-3 px-4 text-center">Avg Speed</th>
+                  <th class="py-3 px-4 text-right">Score Points</th>
+                </tr>
+              </thead>
+              <tbody id="leaderboard-table-body" class="divide-y divide-slate-800/60 text-sm font-medium">
+                <!-- Dynamic rows -->
+              </tbody>
+            </table>
+          </div>
+
+        </div>
+      </section>
+
+    </div>
+
+    <!-- SECTION: FULL MOCK TESTS LIST VIEW -->
+    <div id="view-mock-tests" class="view-section hidden max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-8">
+      <div>
+        <h1 class="text-3xl font-extrabold text-white">All Practice Mock Tests</h1>
+        <p class="text-slate-400 text-sm mt-1">Select an exam category to start your timed test simulation.</p>
+      </div>
+
+      <div class="flex items-center gap-2 overflow-x-auto pb-2 no-scrollbar" id="mock-page-category-tabs">
+        <!-- Duplicate category tabs -->
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="mock-page-tests-grid">
+        <!-- Rendered cards -->
+      </div>
+    </div>
+
+    <!-- SECTION: LIVE LEADERBOARD DETAILED VIEW -->
+    <div id="view-leaderboard" class="view-section hidden max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-8">
+      <div>
+        <div class="inline-flex items-center gap-2 text-xs font-extrabold text-gold-400 uppercase tracking-widest mb-1">
+          <i class="fa-solid fa-crown"></i> Global Competitive Hall of Fame
+        </div>
+        <h1 class="text-3xl font-extrabold text-white">Live Leaderboard Standings</h1>
+      </div>
+
+      <!-- Top 3 Podium Highlights -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6" id="podium-cards">
+        <!-- Dynamically rendered top 3 cards -->
+      </div>
+
+      <!-- Full Leaderboard Search and Table -->
+      <div class="glass-panel p-6 rounded-2xl space-y-4">
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-4 pb-4 border-b border-slate-800">
+          <h3 class="text-lg font-bold text-white">Rankings (#1 to #10)</h3>
+          <div class="relative w-full sm:w-64">
+            <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+            <input type="text" id="leaderboard-search" oninput="app.filterLeaderboard(this.value)" placeholder="Search handle or exam..." class="w-full pl-9 pr-4 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-azure-500">
+          </div>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="text-xs font-bold uppercase tracking-wider text-slate-400 border-b border-slate-800">
+                <th class="py-3 px-4">Rank</th>
+                <th class="py-3 px-4">Handle & Name</th>
+                <th class="py-3 px-4">Target Exam</th>
+                <th class="py-3 px-4 text-center">Accuracy</th>
+                <th class="py-3 px-4 text-center">Avg Speed</th>
+                <th class="py-3 px-4 text-right">Score</th>
+              </tr>
+            </thead>
+            <tbody id="full-leaderboard-body" class="divide-y divide-slate-800/60 text-sm">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION: DAILY QUIZZES VIEW -->
+    <div id="view-daily-quizzes" class="view-section hidden max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-8">
+      <div>
+        <h1 class="text-3xl font-extrabold text-white">Daily Rapid Quizzes</h1>
+        <p class="text-slate-400 text-sm mt-1">Short 5-minute daily drill sets to keep your exam concepts sharp.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="glass-panel p-6 rounded-2xl border border-slate-800 space-y-4">
+          <div class="flex items-center justify-between">
+            <span class="px-2.5 py-1 rounded bg-amber-500/20 text-amber-400 text-xs font-bold">Daily Streak +50 pts</span>
+            <span class="text-xs text-slate-400">Today's Set</span>
+          </div>
+          <h3 class="text-lg font-bold text-white">General Science 10-Q Rapid Fire</h3>
+          <p class="text-xs text-slate-400">Quick physics, chemistry, and bio questions for fast recall.</p>
+          <button onclick="app.launchQuiz('science-speed-01')" class="w-full py-3 rounded-xl font-bold text-white gradient-btn-gold text-sm">
+            Start Today's Quiz
+          </button>
+        </div>
+
+        <div class="glass-panel p-6 rounded-2xl border border-slate-800 space-y-4">
+          <div class="flex items-center justify-between">
+            <span class="px-2.5 py-1 rounded bg-azure-500/20 text-azure-400 text-xs font-bold">State Special</span>
+            <span class="text-xs text-slate-400">Bihar GK</span>
+          </div>
+          <h3 class="text-lg font-bold text-white">BPSC/BSSC History & Geography</h3>
+          <p class="text-xs text-slate-400">Essential static awareness questions for Bihar government competitive exams.</p>
+          <button onclick="app.launchQuiz('bihar-bpsc-bssc-01')" class="w-full py-3 rounded-xl font-bold text-white gradient-btn-primary text-sm">
+            Start Practice
+          </button>
+        </div>
+
+        <div class="glass-panel p-6 rounded-2xl border border-slate-800 space-y-4">
+          <div class="flex items-center justify-between">
+            <span class="px-2.5 py-1 rounded bg-indigo-500/20 text-indigo-400 text-xs font-bold">Quantitative</span>
+            <span class="text-xs text-slate-400">Speed Math</span>
+          </div>
+          <h3 class="text-lg font-bold text-white">Banking PO Number Series & DI</h3>
+          <p class="text-xs text-slate-400">Master fast calculations and logical pattern recognition.</p>
+          <button onclick="app.launchQuiz('banking-po-01')" class="w-full py-3 rounded-xl font-bold text-white gradient-btn-primary text-sm">
+            Start Challenge
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION: ANALYTICS DASHBOARD VIEW -->
+    <div id="view-analytics" class="view-section hidden max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-8">
+      <div>
+        <h1 class="text-3xl font-extrabold text-white">Performance Analytics & Speed Analysis</h1>
+        <p class="text-slate-400 text-sm mt-1">Deep insights into your question accuracy, topic strengths, and speed trends.</p>
+      </div>
+
+      <!-- Stats Metric Cards Grid -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="glass-panel p-6 rounded-2xl border border-slate-800 space-y-2">
+          <div class="text-xs text-slate-400 font-semibold uppercase">Total Mocks Attempted</div>
+          <div class="text-3xl font-black text-white">24 Tests</div>
+          <div class="text-xs text-emerald-400 font-semibold"><i class="fa-solid fa-arrow-trend-up mr-1"></i>+4 tests this week</div>
+        </div>
+
+        <div class="glass-panel p-6 rounded-2xl border border-slate-800 space-y-2">
+          <div class="text-xs text-slate-400 font-semibold uppercase">Overall Accuracy</div>
+          <div class="text-3xl font-black text-emerald-400">88.5%</div>
+          <div class="text-xs text-slate-400">Top 5% percentile in SSC CGL</div>
+        </div>
+
+        <div class="glass-panel p-6 rounded-2xl border border-slate-800 space-y-2">
+          <div class="text-xs text-slate-400 font-semibold uppercase">Average Answering Speed</div>
+          <div class="text-3xl font-black text-azure-400">34 Secs</div>
+          <div class="text-xs text-emerald-400 font-semibold"><i class="fa-solid fa-bolt mr-1"></i>12s faster than peer average</div>
+        </div>
+
+        <div class="glass-panel p-6 rounded-2xl border border-slate-800 space-y-2">
+          <div class="text-xs text-slate-400 font-semibold uppercase">Accumulated Points</div>
+          <div class="text-3xl font-black text-gold-400">1,285 Pts</div>
+          <div class="text-xs text-gold-400 font-semibold"><i class="fa-solid fa-crown mr-1"></i>Global Rank #245</div>
+        </div>
+      </div>
+
+      <!-- Subject Proficiency Breakdown -->
+      <div class="glass-panel p-6 sm:p-8 rounded-2xl space-y-6">
+        <h3 class="text-lg font-bold text-white">Subject Mastery & Accuracy Breakdown</h3>
+
+        <div class="space-y-4">
+          <!-- Subject Item 1 -->
+          <div class="space-y-1.5">
+            <div class="flex justify-between text-sm">
+              <span class="font-bold text-white">General Science (Physics & Chemistry)</span>
+              <span class="font-extrabold text-emerald-400">92% Accuracy</span>
+            </div>
+            <div class="w-full h-2.5 bg-slate-800 rounded-full overflow-hidden">
+              <div class="h-full bg-emerald-500 rounded-full" style="width: 92%"></div>
+            </div>
+          </div>
+
+          <!-- Subject Item 2 -->
+          <div class="space-y-1.5">
+            <div class="flex justify-between text-sm">
+              <span class="font-bold text-white">Reasoning & General Intelligence</span>
+              <span class="font-extrabold text-azure-400">85% Accuracy</span>
+            </div>
+            <div class="w-full h-2.5 bg-slate-800 rounded-full overflow-hidden">
+              <div class="h-full bg-azure-500 rounded-full" style="width: 85%"></div>
+            </div>
+          </div>
+
+          <!-- Subject Item 3 -->
+          <div class="space-y-1.5">
+            <div class="flex justify-between text-sm">
+              <span class="font-bold text-white">Quantitative Aptitude & DI</span>
+              <span class="font-extrabold text-gold-400">78% Accuracy</span>
+            </div>
+            <div class="w-full h-2.5 bg-slate-800 rounded-full overflow-hidden">
+              <div class="h-full bg-gold-500 rounded-full" style="width: 78%"></div>
+            </div>
+          </div>
+
+          <!-- Subject Item 4 -->
+          <div class="space-y-1.5">
+            <div class="flex justify-between text-sm">
+              <span class="font-bold text-white">Bihar State Awareness & General Studies</span>
+              <span class="font-extrabold text-purple-400">90% Accuracy</span>
+            </div>
+            <div class="w-full h-2.5 bg-slate-800 rounded-full overflow-hidden">
+              <div class="h-full bg-purple-500 rounded-full" style="width: 90%"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION: INTERACTIVE QUIZ INTERFACE (DEDICATED FULLSCREEN VIEW / MODAL) -->
+    <div id="view-quiz-interface" class="view-section hidden fixed inset-0 z-50 bg-sapphire-900 flex flex-col overflow-hidden">
+
+      <!-- Quiz Header -->
+      <header class="h-16 bg-sapphire-800 border-b border-slate-800 px-4 sm:px-6 flex items-center justify-between shrink-0">
+        <div class="flex items-center gap-3">
+          <div class="w-8 h-8 rounded-lg bg-azure-500/20 flex items-center justify-center text-azure-400">
+            <i class="fa-solid fa-atom text-sm"></i>
+          </div>
+          <div>
+            <h2 id="quiz-title-display" class="text-sm sm:text-base font-bold text-white line-clamp-1">
+              SSC CGL Tier-1 Grand Mock Test 2025
+            </h2>
+            <div class="text-[11px] text-slate-400 hidden sm:block" id="quiz-subtitle-display">
+              10 Questions • +2 Marks • -0.5 Negative
+            </div>
+          </div>
+        </div>
+
+        <!-- Timer & Actions -->
+        <div class="flex items-center gap-3 sm:gap-6">
+          <!-- Countdown Timer Widget -->
+          <div id="timer-box" class="flex items-center gap-2 px-3 sm:px-4 py-1.5 rounded-xl bg-slate-900 border border-slate-700 text-azure-400 font-mono font-extrabold text-sm sm:text-base transition-all">
+            <i class="fa-solid fa-clock text-xs"></i>
+            <span id="quiz-timer-text">10:00</span>
+          </div>
+
+          <!-- Submit Test Button -->
+          <button onclick="app.confirmSubmitQuiz()" class="px-4 py-2 rounded-xl font-bold text-white gradient-btn-gold text-xs sm:text-sm shadow-md flex items-center gap-2">
+            <i class="fa-solid fa-paper-plane text-xs"></i>
+            <span class="hidden sm:inline">Submit Test</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- Quiz Body Layout (Main Content + Sidebar Question Palette) -->
+      <div class="flex-grow flex flex-col lg:flex-row overflow-hidden relative">
+
+        <!-- Left / Top Question Area -->
+        <div class="flex-grow flex flex-col justify-between p-4 sm:p-8 overflow-y-auto">
+
+          <div class="max-w-3xl mx-auto w-full space-y-6">
+
+            <!-- Question Number & Tag -->
+            <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+              <span class="text-xs font-extrabold tracking-wider uppercase text-azure-400" id="qn-number-badge">
+                Question 1 of 10
+              </span>
+              <div class="flex items-center gap-2 text-xs">
+                <span class="text-slate-400">Marks: <strong class="text-emerald-400">+2.0</strong></span>
+                <span class="text-slate-400">Negative: <strong class="text-rose-400">-0.5</strong></span>
+              </div>
+            </div>
+
+            <!-- Question Statement -->
+            <div id="qn-text-container" class="text-base sm:text-lg font-semibold text-white leading-relaxed">
+              <!-- Rendered question string -->
+            </div>
+
+            <!-- Options List -->
+            <div id="qn-options-container" class="space-y-3 pt-2">
+              <!-- Rendered radio option cards -->
+            </div>
+
+          </div>
+
+          <!-- Question Action Bar (Bottom Controls) -->
+          <div class="max-w-3xl mx-auto w-full pt-6 mt-6 border-t border-slate-800/80 flex flex-wrap items-center justify-between gap-3">
+            <div class="flex items-center gap-2">
+              <button onclick="app.markForReview()" class="px-3.5 py-2 rounded-xl bg-purple-600/20 hover:bg-purple-600/30 text-purple-300 border border-purple-500/40 text-xs sm:text-sm font-semibold transition-all">
+                <i class="fa-solid fa-bookmark mr-1.5"></i> Mark for Review
+              </button>
+              <button onclick="app.clearResponse()" class="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 text-xs sm:text-sm font-semibold transition-all">
+                Clear Response
+              </button>
+            </div>
+
+            <div class="flex items-center gap-2">
+              <button id="btn-prev-qn" onclick="app.prevQuestion()" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs sm:text-sm font-bold border border-slate-700 disabled:opacity-40 disabled:cursor-not-allowed">
+                <i class="fa-solid fa-chevron-left mr-1"></i> Previous
+              </button>
+              <button id="btn-next-qn" onclick="app.nextQuestion()" class="px-5 py-2 rounded-xl font-bold text-white gradient-btn-primary text-xs sm:text-sm shadow-md">
+                Next <i class="fa-solid fa-chevron-right ml-1"></i>
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Right Question Navigation Palette (Sidebar) -->
+        <aside class="w-full lg:w-80 bg-sapphire-800/80 border-t lg:border-t-0 lg:border-l border-slate-800 p-4 sm:p-6 flex flex-col justify-between shrink-0 overflow-y-auto">
+
+          <div class="space-y-6">
+            <div class="flex items-center justify-between pb-2 border-b border-slate-800">
+              <h3 class="text-sm font-bold text-white uppercase tracking-wider">Question Palette</h3>
+              <span id="palette-summary" class="text-xs text-azure-400 font-semibold">0 / 10 Answered</span>
+            </div>
+
+            <!-- Legend Grid -->
+            <div class="grid grid-cols-2 gap-2 text-[11px] font-medium text-slate-300">
+              <div class="flex items-center gap-2">
+                <span class="w-3.5 h-3.5 rounded bg-emerald-500"></span> Answered
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="w-3.5 h-3.5 rounded bg-rose-500"></span> Unanswered
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="w-3.5 h-3.5 rounded bg-purple-500"></span> Marked Review
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="w-3.5 h-3.5 rounded border-2 border-azure-400 bg-slate-800"></span> Current
+              </div>
+            </div>
+
+            <!-- Question Number Buttons Grid -->
+            <div id="palette-grid" class="grid grid-cols-5 gap-2.5 pt-2">
+              <!-- Dynamic buttons 1 to 10 -->
+            </div>
+          </div>
+
+          <!-- Bottom Palette Submit CTA -->
+          <div class="pt-6 mt-6 border-t border-slate-800">
+            <button onclick="app.confirmSubmitQuiz()" class="w-full py-3 rounded-xl font-bold text-white gradient-btn-gold text-xs sm:text-sm shadow-md">
+              Submit Complete Test
+            </button>
+          </div>
+
+        </aside>
+
+      </div>
+
+    </div>
+
+    <!-- SECTION: INSTANT SCORECARD & RESULT DASHBOARD VIEW -->
+    <div id="view-scorecard" class="view-section hidden max-w-5xl mx-auto px-4 sm:px-6 py-12 space-y-10">
+
+      <!-- Scorecard Header Banner -->
+      <div class="glass-panel p-6 sm:p-8 rounded-3xl border border-slate-800 text-center space-y-4 relative overflow-hidden">
+        <div class="absolute -top-10 -right-10 w-48 h-48 bg-gold-500/10 rounded-full blur-2xl pointer-events-none"></div>
+        <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-xs font-extrabold text-emerald-400 uppercase tracking-widest">
+          <i class="fa-solid fa-circle-check"></i> Test Evaluation Complete
+        </div>
+        <h1 id="scorecard-test-title" class="text-2xl sm:text-4xl font-extrabold text-white">
+          SSC CGL Tier-1 Grand Mock Test 2025
+        </h1>
+        <p class="text-slate-400 text-sm max-w-xl mx-auto">
+          Here is your instant performance scorecard, peer velocity comparison, and detailed step-by-step solution breakdown.
+        </p>
+      </div>
+
+      <!-- Main Performance Breakdown Metrics -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+
+        <!-- Total Score Card -->
+        <div class="glass-panel p-6 rounded-2xl border border-slate-800 space-y-2 text-center">
+          <div class="text-xs font-semibold text-slate-400 uppercase">Total Score</div>
+          <div class="text-4xl font-black gradient-text-gold" id="scorecard-score-val">18.0 / 20</div>
+          <div class="text-xs text-emerald-400 font-bold" id="scorecard-percentile-val">Top 3% Aspirant</div>
+        </div>
+
+        <!-- Accuracy Card -->
+        <div class="glass-panel p-6 rounded-2xl border border-slate-800 space-y-2 text-center">
+          <div class="text-xs font-semibold text-slate-400 uppercase">Accuracy Rate</div>
+          <div class="text-4xl font-black text-emerald-400" id="scorecard-accuracy-val">90%</div>
+          <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden mt-2">
+            <div id="scorecard-accuracy-bar" class="bg-emerald-500 h-full rounded-full" style="width: 90%"></div>
+          </div>
+        </div>
+
+        <!-- Time Taken vs Peer Speed -->
+        <div class="glass-panel p-6 rounded-2xl border border-slate-800 space-y-2 text-center">
+          <div class="text-xs font-semibold text-slate-400 uppercase">Your Speed / Qn</div>
+          <div class="text-4xl font-black text-azure-400" id="scorecard-speed-val">24s</div>
+          <div class="text-xs text-slate-400" id="scorecard-peer-speed-val">Peer Avg: 42s (42% Faster)</div>
+        </div>
+
+        <!-- Correct / Incorrect Count -->
+        <div class="glass-panel p-6 rounded-2xl border border-slate-800 space-y-2 text-center">
+          <div class="text-xs font-semibold text-slate-400 uppercase">Correct / Wrong</div>
+          <div class="text-3xl font-extrabold flex items-center justify-center gap-3">
+            <span class="text-emerald-400" id="scorecard-correct-count">9 Correct</span>
+            <span class="text-slate-600">•</span>
+            <span class="text-rose-400" id="scorecard-wrong-count">1 Wrong</span>
+          </div>
+          <div class="text-xs text-slate-400" id="scorecard-unattempted-count">0 Unattempted</div>
+        </div>
+
+      </div>
+
+      <!-- Actions Bar -->
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+        <button onclick="app.retakeCurrentQuiz()" class="w-full sm:w-auto px-6 py-3.5 rounded-xl font-bold text-white gradient-btn-primary text-sm flex items-center justify-center gap-2">
+          <i class="fa-solid fa-rotate-right"></i> Retake This Mock Test
+        </button>
+        <button onclick="app.navigateTo('mock-tests')" class="w-full sm:w-auto px-6 py-3.5 rounded-xl font-bold text-slate-200 glass-card glass-card-hover border border-slate-700 text-sm flex items-center justify-center gap-2">
+          <i class="fa-solid fa-layer-group"></i> Back to All Mock Tests
+        </button>
+      </div>
+
+      <!-- Detailed Solutions Section -->
+      <div class="glass-panel p-6 sm:p-8 rounded-3xl space-y-6 border border-slate-800">
+        <div class="flex items-center justify-between pb-4 border-b border-slate-800">
+          <div>
+            <h3 class="text-xl font-bold text-white">Detailed Solutions & Answer Key</h3>
+            <p class="text-xs text-slate-400 mt-0.5">Click any question to view full explanation and correct answer option.</p>
+          </div>
+          <span class="text-xs font-bold px-3 py-1 rounded bg-slate-800 text-azure-400 border border-slate-700">
+            10 Questions
+          </span>
+        </div>
+
+        <div id="solutions-accordion-list" class="space-y-4">
+          <!-- Dynamically populated solution items -->
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- ================= FOOTER ================= -->
+  <footer class="glass-panel border-t border-slate-800 mt-16 py-8 text-center text-slate-400 text-xs">
+    <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-2 font-bold text-white">
+        <i class="fa-solid fa-atom text-azure-500"></i> Qubit Test Exam Engine
+      </div>
+      <div>
+        Designed for SSC, BPSC, BSSC, General Science & Banking Competitive Exams.
+      </div>
+      <div>
+        &copy; 2025 Qubit Test. All rights reserved.
+      </div>
+    </div>
+  </footer>
+
+  <!-- Application Logic JavaScript -->
+  <script src="js/quiz-data.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
